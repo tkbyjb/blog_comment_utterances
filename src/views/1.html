@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.14/vue.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue-router/3.5.0/vue-router.js"></script>
+</head>
+<body>
+    <div id="box">
+         <p>
+         <router-link to="/home">home</router-link>
+         <router-link to="/news">news</router-link>
+         <router-link to="/music">music</router-link>
+         <router-link to="/login">login</router-link>
+       </p>
+
+           <router-view></router-view>
+     </div>
+ 
+     <script type="text/javascript">
+         const Home = { template: '<div>首页</div>' }
+         const News = { template: '<div>新闻</div>' }
+         const Music = { template: '<div>音乐</div>' }
+         const Login = { template: '<div>登录</div>' }
+         const routes = [
+           { path: '/home', name:'home',component: Home },
+           { path: '/news', name:'news',component: News },
+           { path: '/music', name:'music',component: Music },
+           { path: '/login', name:'login',component: Login }
+         ]
+         const router = new VueRouter({
+           routes 
+         })
+
+         var vm = new Vue({
+           el: '#box',
+           data: {},
+
+           router
+         })
+
+         router.beforeEach((to, from, next) => {
+           console.log('navigation-guards');
+ 
+           const nextRoute = ['news','music'];
+           let isLogin = true; 
+           if (nextRoute.indexOf(to.name) >= 0) {
+             if (!isLogin) {
+               console.log('what fuck');
+               router.push({ name: 'login' })
+               location.reload();
+             }
+           }
+           if (to.name === 'login') {
+             if (isLogin) {
+               router.push({ name: 'home' });
+               location.reload();
+             }
+           }
+           next();
+         });
+     </script>
+ 
+ 
+ </body>
+ 
+</html>
